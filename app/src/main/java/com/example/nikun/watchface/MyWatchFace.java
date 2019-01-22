@@ -144,8 +144,10 @@ public class MyWatchFace extends CanvasWatchFaceService {
             mTextPaint = new Paint();
             mTextPaint.setTypeface(NORMAL_TYPEFACE);
             mTextPaint.setAntiAlias(true);
-            mTextPaint.setColor(
-                    ContextCompat.getColor(getApplicationContext(), R.color.digital_text));
+            mTextPaint.setColor(ContextCompat.getColor(getApplicationContext(), R.color.digital_text));
+
+
+
 
             // Initializes Date Face.
             mTextPaintDate = new Paint();
@@ -367,8 +369,12 @@ public class MyWatchFace extends CanvasWatchFaceService {
             // Draw the background.
             if (isInAmbientMode()) {
                 canvas.drawColor(Color.BLACK);
+                mTextPaint.setColor(ContextCompat.getColor(getApplicationContext(), R.color.digital_text_ambient));
+                mTextPaintDate.setColor(ContextCompat.getColor(getApplicationContext(), R.color.digital_text_date_ambient));
             } else {
                 canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
+                mTextPaint.setColor(ContextCompat.getColor(getApplicationContext(), R.color.digital_text));
+                mTextPaintDate.setColor(ContextCompat.getColor(getApplicationContext(), R.color.digital_text_date));
             }
 
             // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
@@ -386,8 +392,6 @@ public class MyWatchFace extends CanvasWatchFaceService {
             String nothing="";
 
             String concat = Integer.toString(level) + "%";
-
-
 
 
             String text = mAmbient
@@ -430,7 +434,6 @@ public class MyWatchFace extends CanvasWatchFaceService {
             mTextPaintBat.setTextAlign(Paint.Align.LEFT);
             mTextPaintBat.getTextBounds(textBat, 0, textBat.length(), rb);
             float xb = bWidth / 2f - rb.width() / 2f - rb.left;
-
 
 
 
