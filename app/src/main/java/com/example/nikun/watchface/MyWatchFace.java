@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -84,6 +85,8 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
         private final Handler mUpdateTimeHandler = new EngineHandler(this);
         private Calendar mCalendar;
+
+
         private final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -175,6 +178,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
                 return;
             }
             mRegisteredTimeZoneReceiver = true;
+
             IntentFilter filter = new IntentFilter(Intent.ACTION_TIMEZONE_CHANGED);
             MyWatchFace.this.registerReceiver(mTimeZoneReceiver, filter);
         }
@@ -186,6 +190,7 @@ public class MyWatchFace extends CanvasWatchFaceService {
             mRegisteredTimeZoneReceiver = false;
             MyWatchFace.this.unregisterReceiver(mTimeZoneReceiver);
         }
+
 
         @Override
         public void onApplyWindowInsets(WindowInsets insets) {
@@ -350,6 +355,14 @@ public class MyWatchFace extends CanvasWatchFaceService {
             // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
             long now = System.currentTimeMillis();
             mCalendar.setTimeInMillis(now);
+//
+//            IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+//            Intent batteryStatus =  MyWatchFace.this.registerReceiver(null, iFilter);
+//
+//            int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+//
+//            int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+//            int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 
 
 
