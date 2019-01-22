@@ -11,4 +11,8 @@
     <dimen name="digital_x_offset_date">25dp</dimen>
     <dimen name="digital_x_offset_round_date">40dp</dimen>
     <dimen name="digital_y_offset_date">140dp</dimen>
+
+    <dimen name="digital_text_size_bat">10dp</dimen>
+    <dimen name="digital_text_size_round_bat">10dp</dimen>
+    <dimen name="digital_y_offset_bat">170dp</dimen>
 </resources>

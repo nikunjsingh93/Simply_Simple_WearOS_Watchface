@@ -45,6 +45,9 @@ public class MyWatchFace extends CanvasWatchFaceService {
     private static final Typeface DATE_TYPEFACE =
             Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
 
+    private static final Typeface BAT_TYPEFACE =
+            Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
+
     /**
      * Update rate in milliseconds for interactive mode. Defaults to one second
      * because the watch face needs to update seconds in interactive mode.
@@ -100,9 +103,11 @@ public class MyWatchFace extends CanvasWatchFaceService {
         private float mYOffset;
         private float mXOffsetDate;
         private float mYOffsetDate;
+        private float mYOffsetBat;
         private Paint mBackgroundPaint;
         private Paint mTextPaint;
         private Paint mTextPaintDate;
+        private Paint mTextPaintBat;
         /**
          * Whether the display supports fewer bits for each color in ambient mode. When true, we
          * disable anti-aliasing in ambient mode.
@@ -127,6 +132,8 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
             mYOffsetDate = resources.getDimension(R.dimen.digital_y_offset_date);
 
+            mYOffsetBat = resources.getDimension(R.dimen.digital_y_offset_bat);
+
             // Initializes background.
             mBackgroundPaint = new Paint();
             mBackgroundPaint.setColor(
@@ -145,7 +152,14 @@ public class MyWatchFace extends CanvasWatchFaceService {
             mTextPaintDate.setTypeface(DATE_TYPEFACE);
             mTextPaintDate.setAntiAlias(true);
             mTextPaintDate.setColor(
-                    ContextCompat.getColor(getApplicationContext(), R.color.digital_text));
+                    ContextCompat.getColor(getApplicationContext(), R.color.digital_text_date));
+
+            // Initializes Bat Face.
+            mTextPaintBat = new Paint();
+            mTextPaintBat.setTypeface(BAT_TYPEFACE);
+            mTextPaintBat.setAntiAlias(true);
+            mTextPaintBat.setColor(
+                    ContextCompat.getColor(getApplicationContext(), R.color.digital_text_bat));
         }
 
         @Override
@@ -215,9 +229,14 @@ public class MyWatchFace extends CanvasWatchFaceService {
             float textSizeDate = resources.getDimension(isRound
                     ? R.dimen.digital_text_size_round_date : R.dimen.digital_text_size_date);
 
+            float textSizebat = resources.getDimension(isRound
+                    ? R.dimen.digital_text_size_round_bat : R.dimen.digital_text_size_bat);
+
             mTextPaint.setTextSize(textSize);
 
             mTextPaintDate.setTextSize(textSizeDate);
+
+            mTextPaintBat.setTextSize(textSizebat);
         }
 
         @Override
@@ -355,14 +374,19 @@ public class MyWatchFace extends CanvasWatchFaceService {
             // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
             long now = System.currentTimeMillis();
             mCalendar.setTimeInMillis(now);
-//
-//            IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-//            Intent batteryStatus =  MyWatchFace.this.registerReceiver(null, iFilter);
-//
-//            int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
-//
-//            int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-//            int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+
+            IntentFilter iFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+            Intent batteryStatus =  MyWatchFace.this.registerReceiver(null, iFilter);
+
+            int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
+
+            int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+            int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+            String nothing="";
+
+            String concat = Integer.toString(level) + "%";
+
 
 
 
@@ -377,6 +401,10 @@ public class MyWatchFace extends CanvasWatchFaceService {
                     getMonthOfYear(mCalendar.get(Calendar.MONTH)), mCalendar.get(Calendar.DATE))
                     : String.format("%s, %s %02d", getDayOfWeek(mCalendar.get(Calendar.DAY_OF_WEEK)),
                     getMonthOfYear(mCalendar.get(Calendar.MONTH)), mCalendar.get(Calendar.DATE));
+
+
+            String textBat = mAmbient
+                    ? String.format("%s", nothing) : String.format("%s", concat);
 
 
 
@@ -396,11 +424,21 @@ public class MyWatchFace extends CanvasWatchFaceService {
             mTextPaintDate.getTextBounds(textDate, 0, textDate.length(), rw);
             float xr = rWidth / 2f - rw.width() / 2f - rw.left;
 
+            Rect rb = new Rect();
+            canvas.getClipBounds(rb);
+            int bWidth = rb.width();
+            mTextPaintBat.setTextAlign(Paint.Align.LEFT);
+            mTextPaintBat.getTextBounds(textBat, 0, textBat.length(), rb);
+            float xb = bWidth / 2f - rb.width() / 2f - rb.left;
 
 
-           canvas.drawText(text, x, mYOffset, mTextPaint);
+
+
+            canvas.drawText(text, x, mYOffset, mTextPaint);
 
             canvas.drawText(textDate, xr, mYOffsetDate, mTextPaintDate);
+
+            canvas.drawText(textBat, xb, mYOffsetBat, mTextPaintBat);
         }
 
         /**
