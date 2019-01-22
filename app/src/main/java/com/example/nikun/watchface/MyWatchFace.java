@@ -197,14 +197,6 @@ public class MyWatchFace extends CanvasWatchFaceService {
            boolean isRound = insets.isRound();
 
 
-//            int hour = mCalendar.get(Calendar.HOUR);
-
-
-            mXOffset12 = resources.getDimension(isRound
-                        ? R.dimen.digital_x_offset_round_12 : R.dimen.digital_x_offset_12);
-
-
-
 
             mXOffset = resources.getDimension(isRound
                     ? R.dimen.digital_x_offset_round : R.dimen.digital_x_offset);
@@ -375,22 +367,27 @@ public class MyWatchFace extends CanvasWatchFaceService {
 
 
 
-            int hour = mCalendar.get(Calendar.HOUR);
+            Rect r = new Rect();
+            canvas.getClipBounds(r);
+           // int cHeight = r.height();
+            int cWidth = r.width();
+            mTextPaint.setTextAlign(Paint.Align.LEFT);
+            mTextPaint.getTextBounds(text, 0, text.length(), r);
+            float x = cWidth / 2f - r.width() / 2f - r.left;
+           // float y = cHeight / 2f + r.height() / 2f - r.bottom;
 
-            if(hour >= 10){
-
-                canvas.drawText(text, mXOffset12, mYOffset, mTextPaint);
-
-            } else {
-
-                canvas.drawText(text, mXOffset, mYOffset, mTextPaint);
-
-            }
+            Rect rw = new Rect();
+            canvas.getClipBounds(rw);
+            int rWidth = rw.width();
+            mTextPaintDate.setTextAlign(Paint.Align.LEFT);
+            mTextPaintDate.getTextBounds(textDate, 0, textDate.length(), rw);
+            float xr = rWidth / 2f - rw.width() / 2f - rw.left;
 
 
-//            canvas.drawText(text, mXOffset, mYOffset, mTextPaint);
 
-            canvas.drawText(textDate, mXOffsetDate, mYOffsetDate, mTextPaintDate);
+           canvas.drawText(text, x, mYOffset, mTextPaint);
+
+            canvas.drawText(textDate, xr, mYOffsetDate, mTextPaintDate);
         }
 
         /**
