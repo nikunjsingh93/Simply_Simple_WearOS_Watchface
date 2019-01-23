@@ -2,8 +2,8 @@
 <resources>
     <color name="background">#000000</color>
     <color name="digital_text">#ffffff</color>
-    <color name="digital_text_ambient">#cfcfcf</color>
-    <color name="digital_text_date">#f0f0f0</color>
-    <color name="digital_text_date_ambient">#bbbbbb</color>
+    <color name="digital_text_ambient">#b6b6b6</color>
+    <color name="digital_text_date">#afafaf</color>
+    <color name="digital_text_date_ambient">#8c8c8c</color>
     <color name="digital_text_bat">#919bff</color>
 </resources>
